@@ -31,6 +31,8 @@ public class Window extends JFrame {
 	Color kakaoBackground = new Color(191, 209, 221);
 	Color kakaoChatBubble = new Color(254, 240, 27);
 	File[] textList;
+	Model model;
+	Analyze stat;
 
 	Window(JPanel bd) {
 		setSize(800, 830);
@@ -49,9 +51,22 @@ public class Window extends JFrame {
 		JTextField searchField = new JTextField(10);
 		JButton search = new JButton("찾기");
 		JButton analyze = new JButton("분석 모델 생성!");
+		JButton statistics = new JButton("통계자료 생성");
 		JLabel readFirst = new JLabel("파일을 먼저 읽어들이세요!");
 
 		readFirst.setFont(buttonFont);
+
+		statistics.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (model == null) {
+					JOptionPane.showMessageDialog(bd,"분석 모델을 먼저 생성하세요!");
+				} else {
+					Analyze a = new Analyze(model);
+					stat = a;
+					JOptionPane.showMessageDialog(bd,"통계자료 생성 완료");
+				}
+			}
+		});
 
 		analyze.addMouseListener(new MouseAdapter() {
 
@@ -65,6 +80,7 @@ public class Window extends JFrame {
 								"성공적으로 분석 모델을 생성하였습니다.\n 분석한 텍스트: " + String.valueOf(m.textComplete) + "\n 분석한 라인: "
 										+ String.valueOf(m.lineComplete) + "\n 분석한 단어:"
 										+ String.valueOf(m.wordComplete));
+					model = m;
 				}
 
 			}
@@ -171,6 +187,7 @@ public class Window extends JFrame {
 
 		add(bgPnl, BorderLayout.CENTER);
 		bgPnl.add(bd);
+		bgPnl.add(statistics);
 		add(head, BorderLayout.NORTH);
 		add(tail, BorderLayout.SOUTH);
 		// bd.add(contLabel);
@@ -231,7 +248,6 @@ class TextField extends JTextField {
 		setText(getText() + txt + "..." + "\n");
 	}
 }
-
 
 class Progress extends JFrame {
 	JProgressBar progressBar;
