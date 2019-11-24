@@ -43,7 +43,7 @@ class Rank {
 	String word;
 	static ArrayList<Rank> processed = new ArrayList<Rank>();
 	static boolean found = false, ranked = false;
-
+	
 	Rank(){
 		
 	}
@@ -52,42 +52,42 @@ class Rank {
 	}
 	
 	int partition(ArrayList<Rank> rl, int begin, int end) {
-		int pivot, temp, l, r, lFreq, rFreq, pFreq;
+		int p, pivot, temp, l;
+		String tempWord;
 		
-		l = begin;
-		r = end;
-		pivot = (int) (Math.random() * rl.size());	// 피봇은 랜덤으로 설정
-		lFreq = rl.get(l).getFreq();
-		rFreq = rl.get(r).getFreq();
-		pFreq = rl.get(pivot).getFreq();
+		p = (int) Math.floor(Math.random() * rl.size());	// 피봇은 랜덤으로 설정
+		pivot = rl.get(p).getFreq();
+		l = begin-1;
 		
-		while(l < r) {
-			int j = 0;
-			j++;
-			while(( lFreq <= pFreq) && l <= r) {
+		System.out.println("퀵소팅중: 파티션: begin: " + begin + " end: " + end + " pivot: " + p);
+		for(int j = begin; j < end; j++) {
+			if(rl.get(j).getFreq() >= pivot) {
+				
+			}
+			else {
 				l++;
-			}
-			while((rFreq > pFreq) && l <= r) {
-				r--;
-			}
-			
-			if(l <= r) {
-				temp = lFreq;
-				rl.get(l).setFreq(rFreq);
-				rl.get(r).setFreq(temp);
-				if(r == pFreq) {
-					return l;
-				}
+				temp = rl.get(l).getFreq();
+				tempWord = rl.get(l).getWord();
+				rl.get(l).setFreq(rl.get(j).getFreq());
+				rl.get(l).setWord(rl.get(j).getWord());
+				rl.get(j).setFreq(temp);
+				rl.get(j).setWord(tempWord);
 			}
 		}
 		
-		temp = pFreq;
-		rl.get(pivot).setFreq(rFreq);
-		rl.get(r).setFreq(temp);
-		return r;
+		l++;
+		temp = rl.get(l).getFreq();
+		tempWord = rl.get(l).getWord();
+		rl.get(l).setFreq(rl.get(end).getFreq());
+		rl.get(l).setWord(rl.get(end).getWord());
+		rl.get(end).setFreq(temp);
+		rl.get(end).setWord(tempWord);
+		
+		return l;
 
 	}
 	void quickSortStart() {
+		System.out.println("퀵소팅 시작...");
 		quickSort(processed, 0, processed.size()-1);
 	}
 
@@ -96,7 +96,6 @@ class Rank {
 			int p = partition(rl, begin, end);
 			quickSort(rl, begin, p-1);
 			quickSort(rl, p+1, end);
-			System.out.println("정렬: begin: " + begin + "end: " + end);
 		}
 	}
 

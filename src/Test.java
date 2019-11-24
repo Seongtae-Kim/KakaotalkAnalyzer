@@ -1,12 +1,19 @@
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Test {
 	public static void main(String[] args) {
-		QuickSort q = new QuickSort();
-		int [] test = {213, 12, 2, 434, 82, 72, 12, 66};
-		q.sort(test, 0, test.length);
+		Rank r5 = new Rank("5위");
+		r5.setFreq(332);
+		Rank r4 = new Rank("4위");
+		r4.setFreq(7322);
+		Rank r3 = new Rank("3위");
+		r3.setFreq(8729);
+		Rank r2 = new Rank("2위");
+		r2.setFreq(113292);
+		Rank r1 = new Rank("1위");
+		r1.setFreq(214527);
+		System.out.println();
+		r1.quickSortStart();
+		System.out.println();
 		
-		System.out.println(test.toString());
 	}
 }
