@@ -69,10 +69,10 @@ class Rank {
 
 	int partition(ArrayList<Rank> rl, int begin, int end) {
 		loading++;
-		if (loading/1000 >= 1) {
+		if (loading/100000 >= 1) {
 			System.out.print("*");
 		}
-		if (loading == 10000) {
+		if (loading == 10000000) {
 			System.out.println();
 			loading = 0;
 		}
@@ -114,7 +114,7 @@ class Rank {
 			}
 
 		}
-		System.out.println("큇소팅 끝...");
+		System.out.println("퀵소팅 끝...");
 	}
 
 	void quickSort(ArrayList<Rank> rl, int begin, int end) { // 순위 파악 및 순위별로 processed 재정렬
@@ -122,7 +122,6 @@ class Rank {
 			int p = partition(rl, begin, end);
 			quickSort(rl, begin, p - 1);
 			quickSort(rl, p + 1, end);
-			System.out.println();
 		}
 	}
 
