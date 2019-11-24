@@ -1,9 +1,10 @@
 
 public class QuickSort_differentMethod {
-static int i, j, pivot, temp, result, size;
+
 	
 	
 	public static int partition(int[] a, int begin, int end) {
+		int i, j, pivot, temp;
 		pivot = a[end];		// 마지막 값을 pivot으로 선언
 		i = begin-1;
 
@@ -40,7 +41,7 @@ static int i, j, pivot, temp, result, size;
 	}
 	public static void main(String[]args) {
 		int[] list = {69, 10, 30, 2, 16, 8, 31, 22};		// 69가 L이자 begin 값, 22가 R이자 end 값
-		size = list.length;
+		int size = list.length;
 		QuickSort(list, 0, size-1);
 		printArray(list);
 	}

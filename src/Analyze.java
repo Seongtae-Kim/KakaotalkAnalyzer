@@ -4,10 +4,10 @@ public class Analyze {
 	Rank r;
 	ArrayList<Word> wl;
 	ArrayList<Rank> wordRankList;
-	
+
 	Analyze(Model m) {
 		ArrayList<Text> list = m.getList();
-		
+
 		for (Text t : list) { // text별
 			for (int i = 0; i < t.getLineList().size(); i++) { // line별
 				Line l = t.getLine(i);
@@ -19,14 +19,13 @@ public class Analyze {
 						System.out.print("*");
 					}
 					System.out.println();
-				} 
+				}
 			}
 			System.out.println(t.getFileName() + "완료");
 		}
 		r.quickSortStart();// 정렬 시작
 		wordRankList = r.getProcessed();
-		
-	
+
 	}
 
 	public ArrayList<Rank> getWordRankList() {
@@ -43,59 +42,72 @@ class Rank {
 	String word;
 	static ArrayList<Rank> processed = new ArrayList<Rank>();
 	static boolean found = false, ranked = false;
-	
-	Rank(){
-		
+
+	Rank() {
+
 	}
+
 	Rank(String word) {
 		investigate(word);
 	}
-	
-	int partition(ArrayList<Rank> rl, int begin, int end) {
-		int p, pivot, temp, l;
+
+	void swap(ArrayList<Rank> rl, int r1, int r2) {
+		int tempFreq;
 		String tempWord;
-		
-		p = (int) Math.floor(Math.random() * rl.size());	// 피봇은 랜덤으로 설정
-		pivot = rl.get(p).getFreq();
-		l = begin-1;
-		
-		System.out.println("퀵소팅중: 파티션: begin: " + begin + " end: " + end + " pivot: " + p);
-		for(int j = begin; j < end; j++) {
-			if(rl.get(j).getFreq() >= pivot) {
-				
-			}
-			else {
-				l++;
-				temp = rl.get(l).getFreq();
-				tempWord = rl.get(l).getWord();
-				rl.get(l).setFreq(rl.get(j).getFreq());
-				rl.get(l).setWord(rl.get(j).getWord());
-				rl.get(j).setFreq(temp);
-				rl.get(j).setWord(tempWord);
+
+		tempFreq = rl.get(r1).getFreq();
+		tempWord = rl.get(r1).getWord();
+		rl.get(r1).setFreq(rl.get(r2).getFreq());
+		rl.get(r1).setWord(rl.get(r2).getWord());
+		rl.get(r2).setFreq(tempFreq);
+		rl.get(r2).setWord(tempWord);
+	}
+
+	int partition(ArrayList<Rank> rl, int begin, int end) {
+		int pivot, i;
+		pivot = rl.get(end).getFreq();
+		i = begin - 1;
+
+		for (int j = begin; j < end; j++) {
+			if (rl.get(j).getFreq() > pivot) {
+				swap(rl, ++i, j);
 			}
 		}
-		
-		l++;
-		temp = rl.get(l).getFreq();
-		tempWord = rl.get(l).getWord();
-		rl.get(l).setFreq(rl.get(end).getFreq());
-		rl.get(l).setWord(rl.get(end).getWord());
-		rl.get(end).setFreq(temp);
-		rl.get(end).setWord(tempWord);
-		
-		return l;
+
+		swap(rl, ++i, end);
+		return i;
 
 	}
+
 	void quickSortStart() {
 		System.out.println("퀵소팅 시작...");
-		quickSort(processed, 0, processed.size()-1);
+		quickSort(processed, 0, processed.size() - 1);
+
+		int r = 1, same = 0;
+		for (int i = 0; i < processed.size(); i++) {
+			if (i == 0)
+				processed.get(i).setRank(r);
+			else if (processed.get(i).getFreq() == processed.get(i - 1).getFreq()) {
+				processed.get(i).setRank(r);
+				same++;
+			} else {
+				if (same != 0) {
+					r += same;
+					same = 0;
+				}
+				r++;
+				processed.get(i).setRank(r);
+			}
+
+		}
+		System.out.println("큇소팅 끝...");
 	}
 
 	void quickSort(ArrayList<Rank> rl, int begin, int end) { // 순위 파악 및 순위별로 processed 재정렬
-		if(begin < end) {
+		if (begin < end) {
 			int p = partition(rl, begin, end);
-			quickSort(rl, begin, p-1);
-			quickSort(rl, p+1, end);
+			quickSort(rl, begin, p - 1);
+			quickSort(rl, p + 1, end);
 		}
 	}
 
