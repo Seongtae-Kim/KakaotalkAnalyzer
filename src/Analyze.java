@@ -15,8 +15,11 @@ public class Analyze {
 				if (l.isConv() && l.getConvList().size() != 0) {
 					wl = l.getConvList();
 					for (int j = 0; j < wl.size(); j++) { // word 별
-						r = new Rank(wl.get(j).getContent());
-						System.out.print("*");
+						if (!wl.get(j).isEmoji() && !wl.get(j).isMedia() && !wl.get(j).getContent().equals("")) {
+							r = new Rank(wl.get(j).getContent());
+							System.out.print("*");
+						}
+
 					}
 					System.out.println();
 				}
@@ -25,7 +28,7 @@ public class Analyze {
 		}
 		r.quickSortStart();// 정렬 시작
 		wordRankList = r.getProcessed();
-
+		System.out.println();
 	}
 
 	public ArrayList<Rank> getWordRankList() {
@@ -42,6 +45,7 @@ class Rank {
 	String word;
 	static ArrayList<Rank> processed = new ArrayList<Rank>();
 	static boolean found = false, ranked = false;
+	static int loading = 0;
 
 	Rank() {
 
@@ -64,6 +68,15 @@ class Rank {
 	}
 
 	int partition(ArrayList<Rank> rl, int begin, int end) {
+		loading++;
+		if (loading/1000 >= 1) {
+			System.out.print("*");
+		}
+		if (loading == 10000) {
+			System.out.println();
+			loading = 0;
+		}
+		
 		int pivot, i;
 		pivot = rl.get(end).getFreq();
 		i = begin - 1;
@@ -75,6 +88,7 @@ class Rank {
 		}
 
 		swap(rl, ++i, end);
+
 		return i;
 
 	}
@@ -108,6 +122,7 @@ class Rank {
 			int p = partition(rl, begin, end);
 			quickSort(rl, begin, p - 1);
 			quickSort(rl, p + 1, end);
+			System.out.println();
 		}
 	}
 
