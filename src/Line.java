@@ -47,8 +47,12 @@ public class Line extends Text {
 		ArrayList<Integer> index = new ArrayList<Integer>();
 		index = Model.matchChar(getRaw(), ":");
 		tokenize();
-
-		if (index.get(1) >= 23) {
+		
+		if(index.size() == 1) {
+			setAlert(true);
+			getBelongTo().getModel().setDateStart(true);
+		}
+		else if (index.get(1) >= 23) {
 			setConv(true);
 			getBelongTo().getModel().setConvStart(true);
 		} else {
@@ -105,11 +109,7 @@ public class Line extends Text {
 			getBelongTo().getModel().setPrevConv(getLineNum() - 1);
 			getBelongTo().getModel().setConvStart(true);
 
-		} else if (getBelongTo().isKor()) {
-			if (getLineNum() == 8295 && getBelongTo().getModel().textComplete == 6) {
-				System.out.println();
-			}
-
+		} else if (getBelongTo().isKor() && !getBelongTo().getModel().isOldKakao()) {
 			// 첫번째 . 전은 연도
 			// 두번째 . 전은 월
 			// 세번째 . 전은 일
@@ -147,6 +147,41 @@ public class Line extends Text {
 
 			getBelongTo().getModel().setPrevConv(getLineNum() - 1);
 			getBelongTo().getModel().setConvStart(true);
+		}
+		else if (getBelongTo().isKor() && getBelongTo().getModel().isOldKakao()) {
+			String r = getRaw();
+			ArrayList<Integer> y = Model.matchChar(r, "년");
+			ArrayList<Integer> m = Model.matchChar(r, "월");
+			ArrayList<Integer> d = Model.matchChar(r, "일");
+			ArrayList<Integer> com = Model.matchChar(r, ",");
+			ArrayList<Integer> col = Model.matchChar(r, ":");
+
+			String year = r.substring(0, y.get(0));
+			String month = r.substring(y.get(0) + 1, m.get(0)).replaceAll(" ", "");
+			String date = r.substring(m.get(0) + 1, d.get(0)).replaceAll(" ", "");
+			String temp = r.substring(d.get(0) + 2, col.get(0));
+			String[] tmp = temp.split("\\s+");
+			String ampm = tmp[0];
+			String hour = tmp[1];
+			String minute = r.substring(col.get(0) + 1, com.get(0));
+			String speaker = r.substring(com.get(0) + 1, col.get(1) - 1);
+			String conv = r.substring(col.get(1) + 2, r.length());
+
+			Time t = new Time();
+
+			t.setYear(year);
+			t.setMonth(month);
+			t.setDate(date);
+			t.setHour(hour, ampm);
+			t.setMinute(minute);
+			t.setFullDateAndTime();
+			setSpeaker(speaker);
+			setCon(conv);
+			convTokenize();
+			setLineTime(t);
+
+			getBelongTo().getModel().setPrevConv(getLineNum() - 1);
+			getBelongTo().getModel().setConvStart(true);			
 		}
 	}
 

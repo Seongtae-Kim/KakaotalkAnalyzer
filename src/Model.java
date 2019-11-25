@@ -12,7 +12,7 @@ public class Model { // 파일 각각 모델생성
 	Model model; // 모든 파일 정보를 저장하는 모델
 	String createdDate; // 모델이 생성된 날짜&시간
 	ArrayList<Text> list; // 파일 리스트
-	private boolean convStart = false, dateStart = false;
+	private boolean convStart = false, dateStart = false, oldKakao = false;
 	private int prevConv = 0;
 	public int wordComplete = 0;
 	public int lineComplete = 0;
@@ -97,10 +97,6 @@ public class Model { // 파일 각각 모델생성
 		String[] korDay = Time.korDay;
 		boolean exception = true;
 
-		if (line.getLineNum() == 6 && textComplete == 1) {
-			System.out.println();
-		}
-
 		if (line.getBelongTo().isEng()) {
 			for (String s : engMonth) {
 				if (line.getRaw().equals("")) {
@@ -168,6 +164,13 @@ public class Model { // 파일 각각 모델생성
 
 			if (!line.getRaw().equals("") && test.size() >= 4) {
 
+				if(test.size() == 5) {	// 2016년 카카오톡 채팅 형식(채팅방 날짜에 요일이 아니라 시간이 들어간다.
+					if(test.get(3).getContent().equals("오전") || test.get(3).getContent().equals("오후")) {
+						line.setTimeAlert(true);
+						exception = false;
+						oldKakao = true;
+					}
+				}
 				for (String s : korDay) {
 					if (test.get(3).getContent().equals(s)) { // 대화방 타임
 						line.setTimeAlert(true);
@@ -330,4 +333,13 @@ public class Model { // 파일 각각 모델생성
 	public void setPrevConv(int prevConv) {
 		this.prevConv = prevConv;
 	}
+
+	public boolean isOldKakao() {
+		return oldKakao;
+	}
+
+	public void setOldKakao(boolean oldKakao) {
+		this.oldKakao = oldKakao;
+	}
+	
 }
