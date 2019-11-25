@@ -171,8 +171,8 @@ class Rank {
 		return processed;
 	}
 
-	public void setProcessed(ArrayList<Rank> processed) {
-		this.processed = processed;
+	public static void setProcessed(ArrayList<Rank> p) {
+		processed = p;
 	}
 
 }

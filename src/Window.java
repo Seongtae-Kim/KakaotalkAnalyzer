@@ -6,6 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
@@ -34,6 +37,22 @@ public class Window extends JFrame {
 	Model model;
 	Analyze stat;
 
+	static void statWriting(Analyze a) throws IOException{
+		int len = a.getWordRankList().size();
+		ArrayList<Rank> rankList = a.getWordRankList();
+		PrintWriter writer = new PrintWriter("./rank.txt", "UTF-8");
+		for(int i = 0; i < len; i++) {
+			String word = rankList.get(i).getWord();
+			String freq = String.valueOf(rankList.get(i).getFreq());
+			String rank = String.valueOf(rankList.get(i).getRank());
+			if(i <= 200) {
+				System.out.printf("랭킹: %s, 토큰: %s, 빈도: %s", rank, freq, word);
+			}
+			String output = rank + "위: " + word + "(" + freq + "회)";
+			writer.println(output);
+		}
+		writer.close();
+	}
 	Window(JPanel bd) {
 		setSize(800, 830);
 		setResizable(false);
@@ -64,6 +83,12 @@ public class Window extends JFrame {
 					Analyze a = new Analyze(model);
 					stat = a;
 					JOptionPane.showMessageDialog(bd,"통계자료 생성 완료");
+					try {
+						statWriting(stat);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
