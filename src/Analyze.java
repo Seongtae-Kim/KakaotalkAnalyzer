@@ -4,10 +4,11 @@ public class Analyze {
 	Rank r;
 	ArrayList<Word> wl;
 	ArrayList<Rank> wordRankList;
+	Model model; // 통계분석결과가 어떤 모델에서 비롯되었는지 알아내기 위해
 
 	Analyze(Model m) {
 		ArrayList<Text> list = m.getList();
-
+		setModel(m);
 		for (Text t : list) { // text별
 			for (int i = 0; i < t.getLineList().size(); i++) { // line별
 				Line l = t.getLine(i);
@@ -38,6 +39,112 @@ public class Analyze {
 	public void setWordRankList(ArrayList<Rank> wordRankList) {
 		this.wordRankList = wordRankList;
 	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+}
+
+class Speaker {
+	static ArrayList<Speaker> list = new ArrayList<Speaker>();
+	private String name, alias;
+	private int spokenFreq;
+	static boolean found = false;
+
+	Speaker(){
+		
+	}
+	Speaker(String s) {
+		if (list.size() == 0) {
+			this.name = s;
+			spokenFreq++;
+			list.add(this);
+			
+		} else {
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getName().equals(s)) {
+					list.get(i).add();
+				found = true;
+				}
+			}
+			if(!found) {
+				this.name = s;
+				spokenFreq++;
+				list.add(this);
+			}
+		}
+		found = false;
+	}
+	
+	// speaker s가 리스트 l안에 있는지 조사
+	static boolean speakerCheck(String s, ArrayList<Speaker> l) {
+		if (l.size() == 0) {
+			Speaker speaker = new Speaker();
+			speaker.setName(s);
+			speaker.add();
+			l.add(speaker);
+			
+		} else {
+			for (int i = 0; i < l.size(); i++) {
+				if (l.get(i).getName().equals(s)) {
+					l.get(i).add();
+				return true;
+				}
+			}
+			if(!found) {
+				Speaker speaker = new Speaker();
+				speaker.setName(s);
+				speaker.add();
+				l.add(speaker);
+			}
+		}
+		return false;
+	}
+
+	public void add() {
+		spokenFreq++;
+	}
+
+	public void addInList(Speaker s) {
+		list.add(s);
+	}
+
+	public static ArrayList<Speaker> getList() {
+		return list;
+	}
+
+	public static void setList(ArrayList<Speaker> list) {
+		Speaker.list = list;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public int getSpokenFreq() {
+		return spokenFreq;
+	}
+
+	public void setSpokenFreq(int spokenFreq) {
+		this.spokenFreq = spokenFreq;
+	}
+
 }
 
 class Rank {
@@ -69,14 +176,14 @@ class Rank {
 
 	int partition(ArrayList<Rank> rl, int begin, int end) {
 		loading++;
-		if (loading/100000 >= 1) {
+		if (loading / 100000 >= 1) {
 			System.out.print("*");
 		}
 		if (loading == 10000000) {
 			System.out.println();
 			loading = 0;
 		}
-		
+
 		int pivot, i;
 		pivot = rl.get(end).getFreq();
 		i = begin - 1;
@@ -246,6 +353,5 @@ class QuickSort {
 		System.out.println("sorted array");
 		printArray(arr);
 	}
-}
 
-/* This code is contributed by Rajat Mishra */
+}

@@ -37,10 +37,22 @@ public class Window extends JFrame {
 	Model model;
 	Analyze stat;
 
+	
+	
 	static void statWriting(Analyze a) throws IOException{
 		int len = a.getWordRankList().size();
 		ArrayList<Rank> rankList = a.getWordRankList();
+		String name = a.getModel().getList().get(0).getFileName() + "외 " + String.valueOf(a.getModel().getList().size()-1) + "건";
+		
 		PrintWriter writer = new PrintWriter("./rank.txt", "UTF-8");
+		for(int i = 0; i < Speaker.list.size(); i++) {
+			String speakerName = Speaker.list.get(i).getName();
+			String freq = String.valueOf(Speaker.list.get(i).getSpokenFreq());
+			
+			String output = speakerName + ": " + freq + "회 발언";
+			writer.println(output);
+		}
+		
 		for(int i = 0; i < len; i++) {
 			String word = rankList.get(i).getWord();
 			String freq = String.valueOf(rankList.get(i).getFreq());

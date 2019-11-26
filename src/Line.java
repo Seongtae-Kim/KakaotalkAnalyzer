@@ -6,7 +6,8 @@ public class Line extends Text {
 	private int lineNum = 1;
 	// 원문은 raw, 구두점을 없앤 문장 전체는 refined
 	// conv가 true일 경우엔 해당 라인의 시간은 time, 해당 라인의 발화자는 speaker, 해당 라인의 대화 본문은 con
-	private String raw, refined, time, speaker, con;
+	private String raw, refined, time, con;
+	private Speaker speaker;
 	private ArrayList<Word> convList;
 	private Time lineTime;
 	private Text belongTo;
@@ -101,7 +102,7 @@ public class Line extends Text {
 			t.setFullDateAndTime();
 
 			setLineTime(t);
-			setSpeaker(speaker);
+			setSpeaker(new Speaker(speaker));
 			setCon(conv);
 			convTokenize();
 			setLineTime(t);
@@ -140,7 +141,7 @@ public class Line extends Text {
 			t.setHour(hour, ampm);
 			t.setMinute(minute);
 			t.setFullDateAndTime();
-			setSpeaker(speaker);
+			setSpeaker(new Speaker(speaker));
 			setCon(conv);
 			convTokenize();
 			setLineTime(t);
@@ -175,7 +176,7 @@ public class Line extends Text {
 			t.setHour(hour, ampm);
 			t.setMinute(minute);
 			t.setFullDateAndTime();
-			setSpeaker(speaker);
+			setSpeaker(new Speaker(speaker));
 			setCon(conv);
 			convTokenize();
 			setLineTime(t);
@@ -322,11 +323,11 @@ public class Line extends Text {
 		this.conv = conv;
 	}
 
-	public String getSpeaker() {
+	public Speaker getSpeaker() {
 		return speaker;
 	}
 
-	public void setSpeaker(String speaker) {
+	public void setSpeaker(Speaker speaker) {
 		this.speaker = speaker;
 	}
 
