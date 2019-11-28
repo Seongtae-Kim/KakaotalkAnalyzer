@@ -102,7 +102,7 @@ public class Model { // 파일 각각 모델생성
 				if (line.getRaw().equals("")) {
 					break;
 				}
-				if (test.get(0).getContent().equals(s)) {
+				if (test.get(0).getContent().equals(s) && Model.matchCharWhole(test.get(1).getContent(), "\\d")) {
 					exception = false;
 					line.checkChatOrAlert();
 					if (line.isAlert()) { // 채팅방 공지사항일 경우

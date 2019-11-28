@@ -45,6 +45,9 @@ public class Line extends Text {
 	}
 
 	void checkChatOrAlert() {
+		if(this.getLineNum() == 12991 && this.getBelongTo().getModel().textComplete == 1) {
+			System.out.println();
+		}
 		ArrayList<Integer> index = new ArrayList<Integer>();
 		index = Model.matchChar(getRaw(), ":");
 		tokenize();

@@ -59,6 +59,7 @@ public class Window extends JFrame {
 			String rank = String.valueOf(rankList.get(i).getRank());
 			if(i <= 200) {
 				System.out.printf("랭킹: %s, 토큰: %s, 빈도: %s", rank, freq, word);
+				System.out.println();
 			}
 			String output = rank + "위: " + word + "(" + freq + "회)";
 			writer.println(output);
